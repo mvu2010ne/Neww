@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hiệu ứng rơi + nhạc</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .fall {
+      position: absolute;
+      font-size: 24px;
+      animation: fall 8s linear infinite;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .img-fall {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      animation: fall 8s linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    #centerText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+      font-size: 30px;
+      transition: color 1s;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 999;
+    }
+
+    button {
+      margin-right: 10px;
+      padding: 10px;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="centerText">Anh Yêu Em 💖</div>
+  <div class="controls">
+    <button onclick="playSong(0)">Nhạc 1</button>
+    <button onclick="playSong(1)">Nhạc 2</button>
+    <button onclick="playSong(2)">Nhạc 3</button>
+  </div>
+
+  <audio id="audioPlayer" autoplay loop></audio>
+
+  <script>
+    const texts = [
+      "Anh Yêu Em 💖",
+      "Baby Của Anh Là Em Meo A 🐱",
+      "Em Yêu Anh Không 🥰"
+      "Minh Vũ 💗 Meo",
+      "Anh Yeu Em Nhiuuu",
+      "Anh Yeu Ebe Cua Anh💗",
+      "Love You"
+    ];
+
+    const colors = ["#ff69b4", "#00ffff", "#ffff00", "#00ff00", "#ff6600"];
+    const images = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"];
+    const hearts = ["❤", "💖", "💕", "💘", "💓"];
+    const songs = ["nhac1.mp3", "nhac2.mp3", "nhac3.mp3"];
+
+    const audio = document.getElementById("audioPlayer");
+    audio.src = songs[0];
+
+    function playSong(index) {
+      audio.src = songs[index];
+      audio.play();
+    }
+
+    function createFallingText(content, color) {
+      const el = document.createElement("div");
+      el.className = "fall";
+      el.innerText = content;
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.color = color;
+      el.style.fontSize = Math.random() * 30 + 20 + "px";
+      el.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 8000);
+    }
+
+    function createFallingImage(src) {
+      const img = document.createElement("img");
+      img.className = "img-fall";
+      img.src = src;
+      img.style.left = Math.random() * 100 + "vw";
+      img.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      document.body.appendChild(img);
+      setTimeout(() => img.remove(), 8000);
+    }
+
+    function randomEffectLoop() {
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const heart = hearts[Math.floor(Math.random() * hearts.length)];
+      const text = texts[Math.floor(Math.random() * texts.length)];
+      const imgSrc = images[Math.floor(Math.random() * images.length)];
+
+      // Cập nhật chữ giữa
+      const center = document.getElementById("centerText");
+      center.innerText = text;
+      center.style.color = color;
+
+      // Rơi chữ và trái tim
+      for (let i = 0; i < 5; i++) {
+        createFallingText(text.split(" ")[Math.floor(Math.random() * text.split(" ").length)], color);
+        createFallingText(heart, color);
+      }
+
+      // Rơi ảnh
+      createFallingImage(imgSrc);
+    }
+
+    setInterval(randomEffectLoop, 3000); // Mỗi 3 giây đổi màu + tạo hiệu ứng
+
+    window.onload = () => {
+      audio.play();
+    };
+  </script>
+
+</body>
+</html>
